@@ -40,8 +40,7 @@ const Persons = (props) => {
       .map(person => <li key={person.name}>
         {person.name} {person.number} <button onClick=
             {handleClick(person.name, person.id)}>poista</button></li>)}
-    </div>
-    
+    </div>    
   )
 }
 
@@ -94,8 +93,7 @@ const App = () => {
               setPersons(vali.concat(response.data))
               setSuccesMessage(`Korvattiin ${newName}` )
             })
-      }
-      
+      }      
     } else  {
       personService
         .create(nameObject)
@@ -103,6 +101,9 @@ const App = () => {
           console.log('promise fulfilled')
           setPersons(persons.concat(response.data))
           setSuccesMessage(`Listättiin ${newName}`)
+        })
+        .catch(error => {
+          setSuccesMessage(error)
         })      
     }
     setTimeout(() => {
@@ -127,7 +128,7 @@ const App = () => {
   const handleClick = (name, id) => (event) => {
     if(window.confirm(`Poistetaanko ${name}`)){
       const delName = name
-      const vali = persons.filter(person => person.id !==id)    
+      const vali = persons.filter(person => person.id !== id)    
       personService
         .dele(id)
         .then(response => {
