@@ -56,12 +56,25 @@ const Notification = ({ message }) => {
   )
 }
 
+const FailureNotification = ({ message }) => {
+  if(message === null) {
+    return null
+  }
+
+  return (
+    <div className = 'failure'>
+      {message}
+    </div>
+  )
+}
+
 const App = () => {
   const [ persons, setPersons] = useState([])
   const [ newName, setNewName ] = useState('')
-  const [ newNumber, setNewNumber] = useState('')
-  const [ newSearch, setNewSearch] = useState('')
-  const [successMessage, setSuccesMessage] = useState(null)
+  const [ newNumber, setNewNumber ] = useState('')
+  const [ newSearch, setNewSearch ] = useState('')
+  const [successMessage, setSuccesMessage ] = useState(null)
+  const [ failureMessage, setFailureMessage ] = useState(null) 
 
   useEffect(() => {
     console.log('effect')
@@ -103,7 +116,10 @@ const App = () => {
           setSuccesMessage(`Listättiin ${newName}`)
         })
         .catch(error => {
-          setSuccesMessage(error)
+          setFailureMessage(error.response.data.error)
+          setTimeout(() => {
+            setFailureMessage(null)
+          }, 2000)
         })      
     }
     setTimeout(() => {
@@ -147,6 +163,8 @@ const App = () => {
       <h2>Puhelinluettelo</h2>
 
       <Notification message={successMessage} />
+
+      <FailureNotification message={failureMessage} />
 
       <Filter newSearch={newSearch} 
         handleSearch={handleSearch}/>
